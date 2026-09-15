@@ -9,6 +9,8 @@ from backend.agents.engineer import data_engineer_node
 from backend.agents.ml_engineer import ml_engineer_node
 from backend.agents.optimizer import optimizer_node
 from backend.agents.explainability import explainability_node
+from backend.agents.report import report_node
+from backend.agents.deployment import deployment_node
 
 router = APIRouter(prefix="/agents", tags=["Agents"])
 
@@ -165,11 +167,17 @@ async def test_ml_engineer(request: SupervisorRequest):
         state6 = explainability_node(current_state)
         current_state.update(state6)
         
+        # 7. Report Agent (Phase 9)
+        report_node(current_state)
+        
+        # 8. Deployment Agent (Phase 10)
+        deployment_node(current_state)
+        
         return {
             "task": current_state["task_type"],
             "target": current_state["target_column"],
             "best_model": current_state["best_model"],
-            "explainability": current_state.get("explainability", {})
+            "message": "Pipeline complete! Check final_report.md and deployment_package.zip!"
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
