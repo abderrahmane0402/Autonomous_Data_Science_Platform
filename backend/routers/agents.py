@@ -6,6 +6,7 @@ from backend.agents.state import AgentState
 from backend.agents.supervisor import supervisor_agent_node
 from backend.agents.analyst import data_analyst_node
 from backend.agents.engineer import data_engineer_node
+from backend.agents.ml_engineer import ml_engineer_node
 
 router = APIRouter(prefix="/agents", tags=["Agents"])
 
@@ -115,6 +116,50 @@ async def test_engineer(request: SupervisorRequest):
         return {
             "target_column": current_state["target_column"],
             "features_engineered": current_state["features_engineered"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/test-ml-engineer")
+async def test_ml_engineer(request: SupervisorRequest):
+    """
+    Test endpoint to run the FULL AI PIPELINE (Supervisor -> Analyst -> Engineer -> ML Engineer).
+    """
+    try:
+        initial_state: AgentState = {
+            "dataset_metadata": request.dataset_metadata,
+            "task_type": None,
+            "target_column": None,
+            "execution_plan": [],
+            "eda_results": {},
+            "features_engineered": [],
+            "requires_human_approval": True,
+            "human_feedback": None,
+            "models_evaluated": [],
+            "best_model": None
+        }
+        
+        # 1. Supervisor
+        state1 = supervisor_agent_node(initial_state)
+        current_state = {**initial_state, **state1}
+        
+        # 2. Analyst
+        state2 = data_analyst_node(current_state)
+        current_state.update(state2)
+        
+        # 3. Engineer
+        state3 = data_engineer_node(current_state)
+        current_state.update(state3)
+        
+        # 4. ML Engineer
+        state4 = ml_engineer_node(current_state)
+        current_state.update(state4)
+        
+        return {
+            "task": current_state["task_type"],
+            "target": current_state["target_column"],
+            "best_model": current_state["best_model"],
+            "leaderboard": current_state["models_evaluated"]
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
