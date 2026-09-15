@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.routers import datasets
+
 app = FastAPI(
     title="Autonomous Data Science Platform",
     description="Multi-Agent AI System for Data Science Lifecycle",
@@ -15,6 +17,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(datasets.router)
 
 @app.get("/health", tags=["Health"])
 async def health_check():
