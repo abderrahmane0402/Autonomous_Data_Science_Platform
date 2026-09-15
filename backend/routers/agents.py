@@ -5,6 +5,7 @@ from typing import Dict, Any
 from backend.agents.state import AgentState
 from backend.agents.supervisor import supervisor_agent_node
 from backend.agents.analyst import data_analyst_node
+from backend.agents.engineer import data_engineer_node
 
 router = APIRouter(prefix="/agents", tags=["Agents"])
 
@@ -76,6 +77,44 @@ async def test_analyst(request: SupervisorRequest):
             "eda_summary": current_state["eda_results"]["markdown_summary"],
             "data_quality_score": current_state["eda_results"]["data_quality_score"],
             "statistics": current_state["eda_results"]["statistics"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/test-engineer")
+async def test_engineer(request: SupervisorRequest):
+    """
+    Test endpoint to run Supervisor -> Analyst -> Engineer.
+    """
+    try:
+        initial_state: AgentState = {
+            "dataset_metadata": request.dataset_metadata,
+            "task_type": None,
+            "target_column": None,
+            "execution_plan": [],
+            "eda_results": {},
+            "features_engineered": [],
+            "requires_human_approval": True,
+            "human_feedback": None,
+            "models_evaluated": [],
+            "best_model": None
+        }
+        
+        # 1. Supervisor
+        state1 = supervisor_agent_node(initial_state)
+        current_state = {**initial_state, **state1}
+        
+        # 2. Analyst
+        state2 = data_analyst_node(current_state)
+        current_state.update(state2)
+        
+        # 3. Engineer
+        state3 = data_engineer_node(current_state)
+        current_state.update(state3)
+        
+        return {
+            "target_column": current_state["target_column"],
+            "features_engineered": current_state["features_engineered"]
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
