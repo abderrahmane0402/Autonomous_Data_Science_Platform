@@ -7,6 +7,7 @@ from backend.agents.supervisor import supervisor_agent_node
 from backend.agents.analyst import data_analyst_node
 from backend.agents.engineer import data_engineer_node
 from backend.agents.ml_engineer import ml_engineer_node
+from backend.agents.optimizer import optimizer_node
 
 router = APIRouter(prefix="/agents", tags=["Agents"])
 
@@ -154,6 +155,10 @@ async def test_ml_engineer(request: SupervisorRequest):
         # 4. ML Engineer
         state4 = ml_engineer_node(current_state)
         current_state.update(state4)
+        
+        # 5. Optimizer (Phase 7)
+        state5 = optimizer_node(current_state)
+        current_state.update(state5)
         
         return {
             "task": current_state["task_type"],
