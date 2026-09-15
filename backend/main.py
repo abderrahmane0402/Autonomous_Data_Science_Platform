@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
-from backend.routers import datasets
+# Load environment variables from .env file
+load_dotenv()
+
+from backend.routers import datasets, agents
 
 app = FastAPI(
     title="Autonomous Data Science Platform",
@@ -19,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(datasets.router)
+app.include_router(agents.router)
 
 @app.get("/health", tags=["Health"])
 async def health_check():
