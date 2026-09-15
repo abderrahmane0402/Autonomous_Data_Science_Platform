@@ -137,7 +137,7 @@ def optimizer_node(state: AgentState) -> AgentState:
             
         if final_model:
             final_model.fit(X, y)
-            mlflow.sklearn.log_model(final_model, "tuned_model")
+            mlflow.sklearn.log_model(final_model, name="tuned_model")
             
             # Save locally for the deployment agent later
             models_dir = "../models" if not base_path.startswith("test_") else "."

@@ -8,6 +8,7 @@ from backend.agents.analyst import data_analyst_node
 from backend.agents.engineer import data_engineer_node
 from backend.agents.ml_engineer import ml_engineer_node
 from backend.agents.optimizer import optimizer_node
+from backend.agents.explainability import explainability_node
 
 router = APIRouter(prefix="/agents", tags=["Agents"])
 
@@ -160,11 +161,15 @@ async def test_ml_engineer(request: SupervisorRequest):
         state5 = optimizer_node(current_state)
         current_state.update(state5)
         
+        # 6. Explainability (Phase 8)
+        state6 = explainability_node(current_state)
+        current_state.update(state6)
+        
         return {
             "task": current_state["task_type"],
             "target": current_state["target_column"],
             "best_model": current_state["best_model"],
-            "leaderboard": current_state["models_evaluated"]
+            "explainability": current_state.get("explainability", {})
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
