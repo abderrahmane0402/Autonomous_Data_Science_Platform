@@ -78,8 +78,25 @@ def explainability_node(state: AgentState) -> AgentState:
         plt.close()
         
     except Exception as e:
-        print(f"SHAP Error (Some models don't support generic Explainer well): {e}")
-        return state
+        print(f"SHAP Explainer failed, falling back to native feature importances: {e}")
+        try:
+            # Fallback for models like LightGBM that break SHAP TreeExplainer
+            import numpy as np
+            importances = model.feature_importances_
+            indices = np.argsort(importances)[::-1][:10]
+            top_features = {X.columns[i]: float(importances[i]) for i in indices}
+            
+            # Create a simple bar chart instead
+            plt.figure(figsize=(10, 6))
+            plt.barh(list(top_features.keys())[::-1], list(top_features.values())[::-1], color='dodgerblue')
+            plt.xlabel("Native Feature Importance")
+            plt.title(f"Top 10 Feature Importances")
+            plot_path = os.path.join("reports" if not base_path.startswith("test_") else ".", f"shap_summary.png")
+            plt.savefig(plot_path, bbox_inches='tight')
+            plt.close()
+        except Exception as fallback_e:
+            print(f"Explainability completely failed: {fallback_e}")
+            return state
 
     # Use Qwen to explain the top features
     llm = ChatGroq(model="qwen/qwen3.8-27b", temperature=0.1)
