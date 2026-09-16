@@ -1,11 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import os
 
 # Load environment variables from .env file
 load_dotenv()
 
-from backend.routers import datasets, agents
+from backend.routers import datasets, agents, auth
+from backend.database import engine, Base
+from backend import models_db
+
+# Create the SQLite database tables automatically
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Autonomous Data Science Platform",
@@ -22,6 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
 app.include_router(datasets.router)
 app.include_router(agents.router)
 

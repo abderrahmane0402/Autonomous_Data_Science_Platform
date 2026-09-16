@@ -57,6 +57,14 @@ def report_node(state: AgentState) -> AgentState:
             "top_features": top_features,
             "shap_summary": shap_summary
         })
+        
+        # Embed the SHAP image into the markdown report!
+        plot_path = explainability.get("plot_path")
+        if plot_path:
+            # Get just the filename, not the full path, since it will be in the same folder
+            img_name = os.path.basename(plot_path)
+            final_markdown += f"\n\n## Feature Importance Chart\n![SHAP Feature Importance]({img_name})\n"
+            
     except Exception as e:
         print(f"Report Generation Error: {e}")
         final_markdown = "# Error generating report\n" + str(e)
