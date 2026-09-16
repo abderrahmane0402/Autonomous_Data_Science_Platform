@@ -137,7 +137,13 @@ def optimizer_node(state: AgentState) -> AgentState:
             
         if final_model:
             final_model.fit(X, y)
-            mlflow.sklearn.log_model(final_model, name="tuned_model")
+            
+            if "XGBoost" in best_model_name:
+                mlflow.xgboost.log_model(final_model, artifact_path="tuned_model")
+            elif "LightGBM" in best_model_name:
+                mlflow.lightgbm.log_model(final_model, artifact_path="tuned_model")
+            else:
+                mlflow.sklearn.log_model(final_model, artifact_path="tuned_model")
             
             # Save locally for the deployment agent later
             models_dir = "./models" if not base_path.startswith("test_") else "."
