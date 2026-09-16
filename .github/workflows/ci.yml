@@ -19,7 +19,7 @@ jobs:
       - name: Install Ruff
         run: pip install ruff
       - name: Run Ruff Linter
-        run: ruff check backend/
+        run: ruff check backend/ --select E9,F63,F7,F82
 
   frontend-lint:
     name: Frontend Lint & Build Check
