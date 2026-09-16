@@ -7,7 +7,7 @@ from backend.routers.auth import get_current_user
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
-@router.post("/", response_model=schemas.ProjectResponse)
+@router.post("", response_model=schemas.ProjectResponse)
 def create_project(
     project: schemas.ProjectCreate, 
     db: Session = Depends(database.get_db),
@@ -23,7 +23,7 @@ def create_project(
     db.refresh(new_project)
     return new_project
 
-@router.get("/", response_model=List[schemas.ProjectResponse])
+@router.get("", response_model=List[schemas.ProjectResponse])
 def get_projects(
     db: Session = Depends(database.get_db),
     current_user: models_db.User = Depends(get_current_user)
