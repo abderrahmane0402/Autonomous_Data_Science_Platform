@@ -47,7 +47,7 @@ export async function getMe() {
 
 // --- Projects & Datasets ---
 export async function getProjects() {
-    const res = await fetch(`${API_BASE_URL}/projects/`, {
+    const res = await fetch(`${API_BASE_URL}/projects`, {
         method: "GET",
         headers: { ...getAuthHeaders() },
         cache: "no-store",
@@ -57,7 +57,7 @@ export async function getProjects() {
 }
 
 export async function createProject(name: string) {
-    const res = await fetch(`${API_BASE_URL}/projects/`, {
+    const res = await fetch(`${API_BASE_URL}/projects`, {
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
