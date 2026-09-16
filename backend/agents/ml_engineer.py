@@ -69,6 +69,7 @@ def ml_engineer_node(state: AgentState) -> AgentState:
                     best_model_name = name
                     best_model_obj = model
             except Exception as e:
+                print(f"[ML ENGINEER ERROR] Model {name} failed: {e}")
                 metrics.append({"model": name, "error": str(e)})
 
     else:
@@ -118,6 +119,7 @@ def ml_engineer_node(state: AgentState) -> AgentState:
                     best_model_name = name
                     best_model_obj = model
             except Exception as e:
+                print(f"[ML ENGINEER ERROR] Model {name} failed: {e}")
                 metrics.append({"model": name, "error": str(e)})
                 
     # 3. Save the best model

@@ -15,6 +15,7 @@ def report_node(state: AgentState) -> AgentState:
     print("--- REPORT AGENT THINKING ---")
     
     # 1. Gather all the context from the entire pipeline
+    metadata = state.get("dataset_metadata", {})
     task = state.get("task_type", "Unknown")
     target = state.get("target_column", "Unknown")
     
@@ -119,6 +120,8 @@ USE THIS STRUCTURE EXACTLY. Fill in all placeholders with real data. Use proper 
     
     try:
         final_markdown = (prompt | llm | StrOutputParser()).invoke({
+            "project_name": metadata.get("original_filename", "Data Science Project"),
+            "task_type": task,
             "task": task,
             "target": target,
             "score": data_quality_score,
