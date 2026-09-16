@@ -44,6 +44,7 @@ deployment/
 deployment_package/
 *.csv
 *.parquet
+Autonomous_Data_Science_Platform_Master_Plan.md
 
 # Next.js
 frontend/.next/
