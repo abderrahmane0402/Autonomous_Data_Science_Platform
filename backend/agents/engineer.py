@@ -83,7 +83,7 @@ def data_engineer_node(state: AgentState) -> AgentState:
     llm = ChatGroq(
         model="qwen/qwen3.8-27b",
         temperature=0.1,
-        max_tokens=4096  # Increased token limit!
+        max_tokens=800  # Increased token limit!
     )
     
     structured_llm = llm.with_structured_output(EngineerDecision)

@@ -29,6 +29,14 @@ os.makedirs("reports", exist_ok=True)
 app.mount("/deployment", StaticFiles(directory="deployment"), name="deployment")
 app.mount("/reports", StaticFiles(directory="reports"), name="reports")
 
+@app.get("/list-deployments")
+def list_deployments():
+    import os
+    try:
+        return {"files": os.listdir("deployment")}
+    except Exception as e:
+        return {"error": str(e)}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

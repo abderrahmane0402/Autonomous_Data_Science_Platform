@@ -79,6 +79,22 @@ def get_project_report(
 
     return {"markdown": markdown}
 
+@router.get("/{project_id}/download-deployment")
+def download_deployment_zip(project_id: int, db: Session = Depends(database.get_db)):
+    from fastapi.responses import FileResponse
+    import os
+    
+    project = db.query(models_db.Project).filter(models_db.Project.id == project_id).first()
+    if not project or not project.deployment_zip_path:
+        raise HTTPException(status_code=404, detail="Deployment package not found")
+        
+    # project.deployment_zip_path looks like "deployment/proj_1_..._deployment_package.zip"
+    zip_path = os.path.join(".", project.deployment_zip_path)
+    if not os.path.exists(zip_path):
+        raise HTTPException(status_code=404, detail="ZIP file physically missing from server disk")
+        
+    return FileResponse(zip_path, filename=os.path.basename(zip_path), media_type="application/zip")
+
 @router.delete("/{project_id}")
 def delete_project(
     project_id: int,
