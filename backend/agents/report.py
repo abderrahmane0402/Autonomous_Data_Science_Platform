@@ -36,7 +36,7 @@ def report_node(state: AgentState) -> AgentState:
     llm = ChatGroq(
         model="qwen/qwen3.8-27b",
         temperature=0.2,
-        max_tokens=4096
+        max_tokens=800
     )
     
     from langchain_core.output_parsers import StrOutputParser
@@ -55,6 +55,7 @@ The report MUST follow this exact Markdown structure with ALL sections filled in
 
 ## 📋 Executive Summary
 > A 2-3 sentence high-level business summary of what was done, what was found, and what is recommended.
+> **Target Variable Predicted:** `{target}`
 
 ---
 
@@ -74,6 +75,7 @@ Brief paragraph from analyst notes.
 ### Transformations Applied
 | Column | Action |
 |--------|--------|
+| **{target}** | **Target Variable (Untouched)** |
 | col    | action |
 
 ---
