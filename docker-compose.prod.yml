@@ -23,11 +23,12 @@ services:
       context: .
       dockerfile: docker/Dockerfile.backend
     restart: always
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     environment:
       - ENVIRONMENT=production
       - DATABASE_URL=postgresql://autonomo:autonomo_password@db:5432/autonomo_db
+      - ROOT_PATH=/Autonomo/api
     env_file:
       - .env
     depends_on:
@@ -48,10 +49,10 @@ services:
       context: .
       dockerfile: docker/Dockerfile.frontend
       args:
-        NEXT_PUBLIC_API_URL: http://YOUR_VPS_IP_OR_DOMAIN:8000
+        NEXT_PUBLIC_API_URL: /Autonomo/api
     restart: always
     ports:
-      - "3000:3000"
+      - "8503:3000"
     depends_on:
       - backend
 

@@ -18,7 +18,8 @@ from fastapi.staticfiles import StaticFiles
 app = FastAPI(
     title="Autonomous Data Science Platform",
     description="Multi-Agent AI System for Data Science Lifecycle",
-    version="1.0.0"
+    version="1.0.0",
+    root_path=os.getenv("ROOT_PATH", "")
 )
 
 # Ensure directories exist
