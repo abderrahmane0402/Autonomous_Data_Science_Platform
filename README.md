@@ -94,7 +94,7 @@ JWT_SECRET_KEY=your_super_secret_jwt_key
 
 ### 3. Start the entire application
 ```bash
-docker-compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml up -d --build
 ```
 
 Access the application in your browser:
