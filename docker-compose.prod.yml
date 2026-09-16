@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: autonomo
+      POSTGRES_PASSWORD: autonomo_password
+      POSTGRES_DB: autonomo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U autonomo -d autonomo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://autonomo:autonomo_password@db:5432/autonomo_db
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    # Using Docker volumes for datasets and models so they persist on container restart 
+    # (though you mentioned it's fine if they don't, this is best practice for SQLite/Postgres hybrids)
+    volumes:
+      - datasets_data:/app/datasets
+      - models_data:/app/models
+      - reports_data:/app/reports
+      - mlruns_data:/app/mlruns
+    command: >
+      uvicorn backend.main:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://YOUR_VPS_IP_OR_DOMAIN:8000
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  datasets_data:
+  models_data:
+  reports_data:
+  mlruns_data:

@@ -41,8 +41,80 @@ def report_node(state: AgentState) -> AgentState:
     from langchain_core.output_parsers import StrOutputParser
     
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a Senior Data Science Consultant. Your job is to compile the notes from your engineering team into a cohesive, professional Final Report in Markdown format. The report should include: 1. Executive Summary 2. Data Quality & EDA 3. Engineering Methodology 4. Model Performance & Leaderboard 5. Explainability (Why the model makes decisions) 6. Conclusion."),
-        ("human", "Task: {task}\nTarget: {target}\nData Quality Score: {score}\nAnalyst Notes: {analyst_summary}\nFeatures Engineered: {features}\nLeaderboard: {leaderboard}\nBest Model: {best_model}\nTop Drivers: {top_features}\nExplainability Notes: {shap_summary}\n\nWrite the final Markdown report.")
+        ("system", """You are a Senior Data Science Consultant writing a high-quality, professional Final Report for a client.
+
+The report MUST follow this exact Markdown structure with ALL sections filled in properly:
+
+---
+
+# 📊 Final Data Science Report
+## {project_name}
+
+---
+
+## 📋 Executive Summary
+> A 2-3 sentence high-level business summary of what was done, what was found, and what is recommended.
+
+---
+
+## 1. 🔍 Data Quality & Exploratory Analysis
+
+### Data Quality Score: X/100
+
+Brief paragraph from analyst notes.
+
+### Key Observations
+- bullet points of important findings
+
+---
+
+## 2. ⚙️ Feature Engineering
+
+### Transformations Applied
+| Column | Action |
+|--------|--------|
+| col    | action |
+
+---
+
+## 3. 🤖 Model Training & Leaderboard
+
+### Task Type: {task_type}
+### Target Column: {target}
+
+| Rank | Model | Score | Notes |
+|------|-------|-------|-------|
+| 1    | ...   | ...   | Best  |
+
+### 🏆 Best Model: {best_model}
+
+---
+
+## 4. 🧠 Model Explainability (SHAP)
+
+### Top Predictive Features
+| Feature | Importance |
+|---------|------------|
+| ...     | ...        |
+
+Brief explanation of what drives the predictions.
+
+---
+
+## 5. ✅ Conclusion & Recommendations
+
+- **Recommendation 1**: ...
+- **Recommendation 2**: ...
+- **Next Steps**: ...
+
+---
+
+*Report generated autonomously by the Autonomous Data Science Platform.*
+
+---
+
+USE THIS STRUCTURE EXACTLY. Fill in all placeholders with real data. Use proper markdown tables for the leaderboard and features. Do NOT use LaTeX or raw code blocks."""),
+        ("human", "Task: {task}\nTarget: {target}\nData Quality Score: {score}\nAnalyst Notes: {analyst_summary}\nFeatures Engineered: {features}\nLeaderboard: {leaderboard}\nBest Model: {best_model}\nTop Feature Drivers: {top_features}\nExplainability Notes: {shap_summary}\n\nWrite the full structured Markdown report now.")
     ])
     
     try:
@@ -73,10 +145,11 @@ def report_node(state: AgentState) -> AgentState:
     metadata = state.get("dataset_metadata", {})
     base_path = metadata.get("saved_path", "test_dataset.csv")
     
-    reports_dir = "../reports" if not base_path.startswith("test_") else "."
+    reports_dir = "reports" if not base_path.startswith("test_") else "."
     os.makedirs(reports_dir, exist_ok=True)
     
-    report_path = os.path.join(reports_dir, "final_report.md")
+    file_prefix = os.path.splitext(os.path.basename(base_path))[0]
+    report_path = os.path.join(reports_dir, f"{file_prefix}_final_report.md")
     
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(final_markdown)

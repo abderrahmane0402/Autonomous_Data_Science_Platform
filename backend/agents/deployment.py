@@ -87,10 +87,11 @@ def deployment_node(state: AgentState) -> AgentState:
     base_path = metadata.get("saved_path", "test_dataset.csv")
     
     # Locate the trained model
-    models_dir = "../models" if not base_path.startswith("test_") else "."
-    model_path = os.path.join(models_dir, "tuned_best_model.pkl")
+    models_dir = "./models" if not base_path.startswith("test_") else "."
+    file_prefix = os.path.splitext(os.path.basename(base_path))[0]
+    model_path = os.path.join(models_dir, f"{file_prefix}_tuned_best_model.pkl")
     if not os.path.exists(model_path):
-        model_path = os.path.join(models_dir, "best_model.pkl")
+        model_path = os.path.join(models_dir, f"{file_prefix}_best_model.pkl")
         
     if not os.path.exists(model_path):
         print("Deployment Error: No trained model found to package.")
@@ -106,9 +107,9 @@ def deployment_node(state: AgentState) -> AgentState:
     requirements_code = "fastapi\nuvicorn\npydantic\nscikit-learn\npandas\njoblib\nxgboost\nlightgbm\n"
     
     # Create the zip package
-    deploy_dir = "../deployment" if not base_path.startswith("test_") else "."
+    deploy_dir = "./deployment" if not base_path.startswith("test_") else "."
     os.makedirs(deploy_dir, exist_ok=True)
-    zip_path = os.path.join(deploy_dir, "deployment_package.zip")
+    zip_path = os.path.join(deploy_dir, f"{file_prefix}_deployment_package.zip")
     
     with zipfile.ZipFile(zip_path, 'w') as zipf:
         # Write files directly into the zip

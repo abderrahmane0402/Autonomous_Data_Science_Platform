@@ -1,6 +1,32 @@
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# The frontend code will be mounted as a volume in development
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Install dependencies
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci
+
+# Copy the rest of the code and build
+COPY frontend/ .
+
+# Set environment variables for production build
+# This will be baked into the client side if they start with NEXT_PUBLIC_
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
+RUN npm run build
+
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Next.js standalone output
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

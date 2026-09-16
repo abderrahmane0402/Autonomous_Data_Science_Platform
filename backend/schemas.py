@@ -36,6 +36,7 @@ class ProjectResponse(ProjectBase):
     created_at: datetime.datetime
     dataset_path: Optional[str] = None
     data_quality_score: Optional[float] = None
+    dataset_metadata: Optional[Any] = None
     leaderboard: Optional[Any] = None
     best_model_name: Optional[str] = None
     deployment_zip_path: Optional[str] = None

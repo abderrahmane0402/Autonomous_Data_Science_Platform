@@ -1,6 +1,8 @@
 import pandas as pd
 import joblib
 import shap
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend — safe for background threads
 import matplotlib.pyplot as plt
 import os
 import numpy as np
@@ -23,12 +25,13 @@ def explainability_node(state: AgentState) -> AgentState:
     metadata = state.get("dataset_metadata", {})
     base_path = metadata.get("saved_path", "test_dataset.csv")
     engineered_path = base_path.replace(".csv", "_engineered.csv")
-    models_dir = "../models" if not base_path.startswith("test_") else "."
+    models_dir = "./models" if not base_path.startswith("test_") else "."
     
     # Try to load the tuned model first, fallback to best_model
-    model_path = os.path.join(models_dir, "tuned_best_model.pkl")
+    file_prefix = os.path.splitext(os.path.basename(base_path))[0]
+    model_path = os.path.join(models_dir, f"{file_prefix}_tuned_best_model.pkl")
     if not os.path.exists(model_path):
-        model_path = os.path.join(models_dir, "best_model.pkl")
+        model_path = os.path.join(models_dir, f"{file_prefix}_best_model.pkl")
         
     try:
         df = pd.read_csv(engineered_path)
@@ -65,9 +68,9 @@ def explainability_node(state: AgentState) -> AgentState:
         top_features = {k: round(float(v), 4) for k, v in sorted_features[:5]}
         
         # Generate and save a SHAP bar plot
-        reports_dir = "../reports" if not base_path.startswith("test_") else "."
+        reports_dir = "./reports" if not base_path.startswith("test_") else "."
         os.makedirs(reports_dir, exist_ok=True)
-        plot_path = os.path.join(reports_dir, "shap_summary.png")
+        plot_path = os.path.join(reports_dir, f"{file_prefix}_shap_summary.png")
         
         plt.figure(figsize=(10, 6))
         shap.summary_plot(shap_values, X_sample, plot_type="bar", show=False)

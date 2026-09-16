@@ -23,6 +23,7 @@ class Project(Base):
     
     dataset_path = Column(String, nullable=True)
     data_quality_score = Column(Float, nullable=True)
+    dataset_metadata = Column(JSON, nullable=True)
     
     # Store the entire final leaderboard as JSON
     leaderboard = Column(JSON, nullable=True)

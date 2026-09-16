@@ -140,9 +140,10 @@ def optimizer_node(state: AgentState) -> AgentState:
             mlflow.sklearn.log_model(final_model, name="tuned_model")
             
             # Save locally for the deployment agent later
-            models_dir = "../models" if not base_path.startswith("test_") else "."
+            models_dir = "./models" if not base_path.startswith("test_") else "."
             os.makedirs(models_dir, exist_ok=True)
-            saved_model_path = os.path.join(models_dir, "tuned_best_model.pkl")
+            file_prefix = os.path.splitext(os.path.basename(base_path))[0]
+            saved_model_path = os.path.join(models_dir, f"{file_prefix}_tuned_best_model.pkl")
             joblib.dump(final_model, saved_model_path)
             
     print(f"Optuna found best params: {best_params} with Score: {best_tuned_score}")

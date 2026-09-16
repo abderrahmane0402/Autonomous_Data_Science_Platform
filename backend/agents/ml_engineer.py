@@ -123,9 +123,10 @@ def ml_engineer_node(state: AgentState) -> AgentState:
     # 3. Save the best model
     saved_model_path = None
     if best_model_obj is not None:
-        models_dir = "../models" if not base_path.startswith("test_") else "."
+        models_dir = "./models"
         os.makedirs(models_dir, exist_ok=True)
-        saved_model_path = os.path.join(models_dir, "best_model.pkl")
+        file_prefix = os.path.splitext(os.path.basename(base_path))[0]
+        saved_model_path = os.path.join(models_dir, f"{file_prefix}_best_model.pkl")
         joblib.dump(best_model_obj, saved_model_path)
         print(f"Best model ({best_model_name}) saved to {saved_model_path}")
         
