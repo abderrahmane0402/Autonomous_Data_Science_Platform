@@ -16,9 +16,13 @@
 Automate your entire data science lifecycle—from feature engineering and AutoML to SHAP explainability and FastAPI model deployment—using collaborating AI agents.
 
 🌐 **Live Demo:** [https://sabkari-dev.ddns.net/Autonomo](https://sabkari-dev.ddns.net/Autonomo)
-*(Note: Create an account on the live demo to begin).*
+*(Note: Create an account on the live demo to begin. This live platform is actively hosted on an Oracle Cloud Virtual Machine).*
 
-🚢 **Test Dataset:** To see the AI in action, download the classic [Titanic Dataset (CSV)](https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv). Upload it to the platform, select `Survived` as the target variable, and watch the agents build the entire pipeline!
+🚢 **Test Dataset:** To see the AI in action, download the classic [Titanic Dataset (CSV)](https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv). Upload it to the platform, and watch the Supervisor Agent automatically infer the `Survived` target variable and build the entire pipeline!
+
+⚠️ **Note on AI Randomness:** Because this platform uses autonomous LLM agents to write the Python Pandas code on the fly, it is subject to the natural "temperature" (randomness) of AI models. If a pipeline fails (for example, if the Data Engineer agent forgets to encode a text column like `Cabin` or `Embarked` on the Titanic dataset, causing Scikit-Learn to crash), **simply click "Run AI Pipeline" again!** The AI will analyze the dataset from scratch and usually write a perfectly corrected script on the second try.
+
+⏳ **API Rate Limits:** The live demo is powered by a **Free Tier Groq API Key**. Because the pipeline triggers 5 LLM agents back-to-back in under 5 seconds, you may occasionally hit the strict 1,000 token/minute free tier limit. If the pipeline stalls or errors out on the Report or Deployment stage, **please wait 1 minute before running the pipeline again** to allow the API limits to reset.
 
 [Features](#-key-features) • [Preview](#-preview) • [Architecture](#-architecture) • [Quickstart](#-quickstart-with-docker) • [Tech Stack](#-tech-stack) • [License](#-license)
 
@@ -29,9 +33,7 @@ Automate your entire data science lifecycle—from feature engineering and AutoM
 ## 🖼️ Preview
 
 <div align="center">
-  <img src="planning/general_workflow.png" alt="Platform Architecture Preview" width="900" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" />
-  <br />
-  <i>(Replace with a dashboard screenshot later)</i>
+  <img src="overview.png" alt="Platform Dashboard Preview" width="900" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" />
 </div>
 
 ---
