@@ -81,7 +81,6 @@ def explainability_node(state: AgentState) -> AgentState:
         print(f"SHAP Explainer failed, falling back to native feature importances: {e}")
         try:
             # Fallback for models like LightGBM that break SHAP TreeExplainer
-            import numpy as np
             importances = model.feature_importances_
             indices = np.argsort(importances)[::-1][:10]
             top_features = {X.columns[i]: float(importances[i]) for i in indices}

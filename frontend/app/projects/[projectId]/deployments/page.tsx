@@ -47,7 +47,7 @@ export default function DeploymentsPage() {
         <Button
           onClick={() => {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-            window.open(${baseUrl}/projects//download-deployment)
+            window.open(`${baseUrl}/projects/${project?.id}/download-deployment`)
           }}
           disabled={!isCompleted}
           className="bg-indigo-500 hover:bg-indigo-400"
@@ -98,7 +98,7 @@ export default function DeploymentsPage() {
               <Button
                 onClick={() => {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-            window.open(${baseUrl}/projects//download-deployment)
+            window.open(`${baseUrl}/projects/${project?.id}/download-deployment`)
           }}
                 disabled={!isCompleted}
                 variant="outline"

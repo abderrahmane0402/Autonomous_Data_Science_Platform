@@ -11,11 +11,14 @@
 [![Scikit-Learn](https://img.shields.io/badge/Scikit_Learn-1.9+-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)](https://postgresql.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Platform%20Demo-4F46E5?style=for-the-badge&logo=google-chrome&logoColor=white)](https://your-demo-url-goes-here.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Platform%20Demo-4F46E5?style=for-the-badge&logo=google-chrome&logoColor=white)](https://sabkari-dev.ddns.net/Autonomo)
 
 Automate your entire data science lifecycle—from feature engineering and AutoML to SHAP explainability and FastAPI model deployment—using collaborating AI agents.
 
-🌐 **Live Demo:** [https://your-demo-url-goes-here.com](https://your-demo-url-goes-here.com)
+🌐 **Live Demo:** [https://sabkari-dev.ddns.net/Autonomo](https://sabkari-dev.ddns.net/Autonomo)
+*(Note: Create an account on the live demo to begin).*
+
+🚢 **Test Dataset:** To see the AI in action, download the classic [Titanic Dataset (CSV)](https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv). Upload it to the platform, select `Survived` as the target variable, and watch the agents build the entire pipeline!
 
 [Features](#-key-features) • [Preview](#-preview) • [Architecture](#-architecture) • [Quickstart](#-quickstart-with-docker) • [Tech Stack](#-tech-stack) • [License](#-license)
 
